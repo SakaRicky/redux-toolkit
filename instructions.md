@@ -1,3 +1,7 @@
+Filter
+
+https://stackoverflow.com/questions/74328848/how-to-filters-by-category-using-redux-toolkit-in-reactjs
+
 # Background:
 
 PHP, JQUERY code.

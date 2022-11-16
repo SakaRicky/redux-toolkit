@@ -7,8 +7,8 @@ export const getTopics = createAsyncThunk(
   "topics/get",
   async () => {
     const res = await TopicApiService.getAll();
-    console.log(res);
-    return res.data;
+    // console.log(res.data['topics']);
+    return res.data['topics'];
   }
 );
 
@@ -52,6 +52,16 @@ export const findTopicsByTitle = createAsyncThunk(
   }
 );
 
+export const filterTopics = createAsyncThunk(
+  "topics/filter",
+  async ({ category_id }) => {
+    // console.log(" Cat ID: " + category_id);
+    const res = await TopicApiService.getAll(category_id);
+    // console.log( res.data['topics'] );
+    return res.data['topics'];
+  }
+);
+
 const topicSlice = createSlice({
   name: "topic",
   initialState,
@@ -86,6 +96,10 @@ const topicSlice = createSlice({
       return [...action.payload];
     },
 
+    [filterTopics.fulfilled]: (state, action) => {
+      return [ ...action.payload];
+    },
+    
   },
 });
 

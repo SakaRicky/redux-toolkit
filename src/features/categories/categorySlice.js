@@ -1,92 +1,92 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import TopicApiService from "../services";
+import CategoryApiService from "./categoryService";
 
 const initialState = [];
 
-export const getTopics = createAsyncThunk(
-  "topics/retrieve",
+export const getCategories = createAsyncThunk(
+  "categories/get",
   async () => {
-    const res = await TopicApiService.getAll();
-    console.log(res);
-    return res.data;
+    const res = await CategoryApiService.getAll();
+    return res.data['items'];
   }
 );
 
-export const createTopic = createAsyncThunk(
-  "topics/create",
+export const createCategory = createAsyncThunk(
+  "categories/create",
   async ({ title, description }) => {
-    const res = await TopicApiService.create({ title, description });
+    const res = await CategoryApiService.create({ title, description });
     return res.data;
   }
 );
 
-export const updateTopic = createAsyncThunk(
-  "topics/update",
+export const updateCategory = createAsyncThunk(
+  "categories/update",
   async ({ id, data }) => {
-    const res = await TopicApiService.update(id, data);
+    const res = await CategoryApiService.update(id, data);
     return res.data;
   }
 );
 
-export const deleteTopic = createAsyncThunk(
-  "topics/delete",
+export const deleteCategory = createAsyncThunk(
+  "categories/delete",
   async ({ id }) => {
-    await TopicApiService.remove(id);
+    await CategoryApiService.remove(id);
     return { id };
   }
 );
 
-export const deleteAllTopics = createAsyncThunk(
-  "topics/deleteAll",
+export const deleteAllCategories = createAsyncThunk(
+  "categories/deleteAll",
   async () => {
-    const res = await TopicApiService.removeAll();
+    const res = await CategoryApiService.removeAll();
     return res.data;
   }
 );
 
-export const findTopicsByTitle = createAsyncThunk(
-  "topics/findByTitle",
+export const findCategoriesByTitle = createAsyncThunk(
+  "categories/findByTitle",
   async ({ title }) => {
-    const res = await TopicApiService.findByTitle(title);
+    const res = await CategoryApiService.findByTitle(title);
     return res.data;
   }
 );
 
-const topicSlice = createSlice({
-  name: "topic",
+const categorySlice = createSlice({
+  name: "category",
   initialState,
   extraReducers: {
-    [createTopic.fulfilled]: (state, action) => {
+
+    [createCategory.fulfilled]: (state, action) => {
       state.push(action.payload);
     },
 
-    [getTopics.fulfilled]: (state, action) => {
+    [getCategories.fulfilled]: (state, action) => {
       return [...action.payload];
     },
 
-    [updateTopic.fulfilled]: (state, action) => {
-      const index = state.findIndex(topic => topic.id === action.payload.id);
+    [updateCategory.fulfilled]: (state, action) => {
+      const index = state.findIndex(category => category.id === action.payload.id);
       state[index] = {
         ...state[index],
         ...action.payload,
       };
     },
 
-    [deleteTopic.fulfilled]: (state, action) => {
+    [deleteCategory.fulfilled]: (state, action) => {
       let index = state.findIndex(({ id }) => id === action.payload.id);
       state.splice(index, 1);
     },
 
-    [deleteAllTopics.fulfilled]: (state, action) => {
+    [deleteAllCategories.fulfilled]: (state, action) => {
       return [];
     },
 
-    [findTopicsByTitle.fulfilled]: (state, action) => {
+    [findCategoriesByTitle.fulfilled]: (state, action) => {
       return [...action.payload];
     },
 
   },
 });
 
-const { reducer } = topicSlice;
+const { reducer } = categorySlice;
 export default reducer;
