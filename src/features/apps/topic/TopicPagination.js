@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Pagination } from 'react-bootstrap';
 
 export default function TopicPagination({
   count,
@@ -6,24 +7,23 @@ export default function TopicPagination({
   pagesPerPage,
   currentPage,
 }) {
-
   const pagesCount = Math.ceil(count / pagesPerPage);
   const onPageNumberClick = (i) => {
     paginate(i);
   };
   return (
     <>
-      
+      <Pagination>
         {[...new Array(pagesCount)].map((_, i) => (
-          <div
+          <Pagination.Item
             key={i}
             active={i + 1 === currentPage}
             onClick={() => onPageNumberClick(i + 1)}
           >
             {i + 1}
-          </div>
+          </Pagination.Item>
         ))}
-      
+      </Pagination>
     </>
   );
 }

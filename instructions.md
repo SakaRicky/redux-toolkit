@@ -1,6 +1,8 @@
 RTK QUERY
 https://blog.openreplay.com/fetching-data-in-redux-using-rtk-query/
 
+https://redux.js.org/tutorials/essentials/part-8-rtk-query-advanced#comparing-transformation-approaches
+
 https://www.reddit.com/r/reactjs/comments/rz8928/can_anyone_share_a_project_repo_that_uses_react/
 https://medium.com/@jdhawks/redux-toolkit-and-rtk-query-with-react-js-14e34be65622
 https://github.com/AlexNti/coin_market/tree/master/src

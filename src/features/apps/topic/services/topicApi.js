@@ -14,11 +14,8 @@ export const topicApi = createApi({
         method: 'GET',
       }),
     }),
-    getTopicById2: builder.query({
-      query: (id) => ({
-        url: `/single_read.php?${id}`,
-        method: 'GET',
-      }),
+    topics: builder.query({
+      query: () => "/read.php"
     }),
     getTopicById: builder.query({
       query: (arg) => {
@@ -75,4 +72,4 @@ export const topicApi = createApi({
   }),
 });
 
-export const { useGetTopicsMutation, useGetTopicByIdQuery, useAddTopicMutation, useUpdateTopicMutation, useDeleteTopicMutation, useGetTopicsByCategoryIdQuery, usePutAddTopicsMutation } = topicApi;
+export const { useTopicsQuery, useGetTopicsMutation, useGetTopicByIdQuery, useAddTopicMutation, useUpdateTopicMutation, useDeleteTopicMutation, useGetTopicsByCategoryIdQuery, usePutAddTopicsMutation } = topicApi;

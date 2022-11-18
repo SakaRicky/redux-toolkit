@@ -8,7 +8,7 @@ export default function TopicsList({ filterTopics, getTopic }) {
 
   //DEFAULT LIST OF ALL TOPICS
   let topics = useSelector((state) => state.topics.topics);
-  const [getTopics, { isLoading }] = useGetTopicsMutation();
+  const [getTopics] = useGetTopicsMutation();
 
   //FETCHING LIST OF TOPICS BY CATEGORY_ID FROM PARENT
   // const filterTopics
@@ -48,7 +48,7 @@ export default function TopicsList({ filterTopics, getTopic }) {
     <>
       {/* {isLoading && <div>Loading .... </div>} */}
 
-      <p className='mt-5 mb-3'>Showing x of total topics.</p>
+      <p className='mt-5 mb-3'>Showing {indexOfFirstPost  + 1} - {indexOfLastPost} of {topics.length} topics.</p>
       <ul className="list-unstyled h-50 overflow-auto">
         {currentTopics.map((topic) => (
           <TopicItem 

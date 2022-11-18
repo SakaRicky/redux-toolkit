@@ -26,7 +26,7 @@ const CategoriesList = ( { currentCategory, categoryChangeHandler } ) => {
       <div className="col-md-12">
         
         <ul className="list-group m-4">
-          <li className="list-group-item" onClick={() => categoryChangeHandler(0)}>All</li>
+          <li className="list-group-item" onClick={() => categoryChangeHandler()}>All</li>
           {categoriesFinal.map((category) => (
             <li
               key={category.id}
