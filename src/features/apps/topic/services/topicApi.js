@@ -5,14 +5,31 @@ export const topicApi = createApi({
   reducerPath: 'topicApi',
   baseQuery: fetchBaseQuery({
     // baseUrl: 'https://jsonplaceholder.typicode.com',
-    baseUrl: 'http://localhost:8080/api',
+    baseUrl: 'http://localhost:8080/api/topics',
   }),
   endpoints: (builder) => ({
     getTopics: builder.mutation({
       query: () => ({
-        url: '/topics/actions/read.php',
+        url: '/actions/read.php',
         method: 'GET',
       }),
+    }),
+    getTopicsByCategoryId2: builder.query({
+      query: (category_id) => ({
+        url:`/actions/read.php?${category_id}`,
+        method: 'GET',
+      }),
+    }),
+    getTopicsByCategoryId: builder.query({
+      query: (arg) => {
+        const { category_id } = arg;
+        console.log('arg: ', arg);
+        return {
+          url: '/actions/read.php',
+          params: { category_id },
+          method: 'GET',
+        };
+      },
     }),
     putAddTopics: builder.mutation({
       query: (body) => ({
@@ -24,4 +41,4 @@ export const topicApi = createApi({
   }),
 });
 
-export const { useGetTopicsMutation, usePutAddTopicsMutation } = topicApi;
+export const { useGetTopicsMutation, useGetTopicsByCategoryIdQuery, usePutAddTopicsMutation } = topicApi;

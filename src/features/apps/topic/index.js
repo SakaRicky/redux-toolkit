@@ -5,6 +5,9 @@ import TodoList from "./redux/TodoList";
 import TopicDetail from "./TopicDetail";
 import CategoriesList from "../../categories/CategoriesList";
 import axios from 'axios';
+import { skipToken } from "@reduxjs/toolkit/query";
+
+import { useGetTopicsByCategoryIdQuery } from './services/topicApi';
 
 const TopicApp = () => {
 
@@ -16,6 +19,7 @@ const TopicApp = () => {
   
   const [filteredTopics, setFilteredTopics] = useState(null);
   const [currentCategory, setCurrentCategory] = useState("");
+  const [currentCategoryId, setCurrentCategoryId] = useState(skipToken) // initialize with skipToken to skip at first
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentTopic, setCurrentTopic] = useState(null);
 
@@ -24,6 +28,12 @@ const TopicApp = () => {
   
   const categoryChangeHandler = (category_id) => {
     setCurrentCategory(category_id);
+    setCurrentCategoryId(category_id);
+
+    // alert(currentCategoryId);
+
+    console.log("currentCategoryId: " + category_id);
+
     if (category_id === 0) {
       setFilter(false);
     } else {
@@ -43,34 +53,33 @@ const TopicApp = () => {
       setFilter(true);
       setCurrentIndex(-1);
     }
+
   };
     // console.log(filteredTopics);
-
-    useEffect(() => {
-      // If you want do do some other action after
-      // the response is set do it here. This useEffect will only fire
-      // when response changes.
-   }, [response]); // Makes the useEffect dependent on response.
-
-   /*
-   function searchTopics() {
-      axios.get(url).then(res => {
-         // Handle Your response here.
-         // Likely you may want to set some state
-         setResponse(res);
-      });
-   };
-
-   function HandleChange(event) {
-      setInterest(event.target.value);
-   };
-   */
 
   const setActiveTopic = (topic, index) => {
     // console.log("setActiveTopic: " + JSON.stringify(topic));
     setCurrentTopic(topic);
     setCurrentIndex(index);
   };
+
+  // console.log("currentCategoryId: " + currentCategoryId);
+
+  // const { data, error, isLoading } = useGetTopicsByCategoryIdQuery({ category_id: 1 });
+  const filteredTopics2 = useGetTopicsByCategoryIdQuery(currentCategoryId)
+  const filterTopics = filteredTopics2['data'];
+
+  console.log("filteredTopics2: " + filterTopics );
+
+
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
+  // if (error) {
+  //   return <div>Oops, an error occured</div>;
+  // }
+
+  // console.log("useGetTopicsByCategoryIdQuery: " + JSON.stringify(data));
 
 
   return (
@@ -90,6 +99,7 @@ const TopicApp = () => {
             filteredTopics={filteredTopics}
           />
           <TodoList 
+            filterTopics={filterTopics}
           />
         </div>
         <div className="category col-md-3">

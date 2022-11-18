@@ -4,23 +4,30 @@ import TodoItem from './TodoItem';
 import TodoPagination from './TodoPagination';
 import { useGetTopicsMutation } from '../services/topicApi';
 
-export default function TodoList() {
+export default function TodoList({ filterTopics }) {
+
+  //DEFAULT LIST OF ALL TOPICS
   const topics = useSelector((state) => state.topics.topics);
-
-  console.log("TODOS: " + JSON.stringify(topics));
-
   const [getTopics, { isLoading }] = useGetTopicsMutation();
+
+  //FETCHING LIST OF TOPICS BY CATEGORY_ID FROM PARENT
+  // const filterTopics
+
+  //HOW TO REPLACE topics with incoming filterTopics ??
+
+  // setTopics('1');
+
+
+  console.log("TODOS 1: " + topics );
 
   const [pagesPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-
     const fetchData = async () => {
       await getTopics();
     };
     fetchData();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
 
@@ -37,7 +44,7 @@ export default function TodoList() {
 
   return (
     <>
-      {isLoading && <div>Loading .... </div>}
+      {/* {isLoading && <div>Loading .... </div>} */}
 
       <p className='mt-5'>Based on RTK & RTK Query. src/apps/topic/redux/TodoList</p>
       <p className="mb-4">Category change not yet implemented.</p>
