@@ -1,95 +1,72 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getTopics,
-  findTopicsByTitle,
-  deleteAllTopics,
-} from "./slices";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import TopicItem from './TopicItem';
+import TopicPagination from './TopicPagination';
+import { useGetTopicsMutation } from './services/topicApi';
 
-const TopicsList = ({ filter, filteredTopics, setActiveTopic, setCurrentTopic }) => {
+export default function TopicsList({ filterTopics, getTopic }) {
 
-  const dispatch = useDispatch();
-  const [searchTitle, setSearchTitle] = useState("");
-  const topics = useSelector(state => state.topic);
-  const [currentIndex, setCurrentIndex] = useState(-1);
-  const [searchQuery, setSearchQuery] = useState("");
+  //DEFAULT LIST OF ALL TOPICS
+  let topics = useSelector((state) => state.topics.topics);
+  const [getTopics, { isLoading }] = useGetTopicsMutation();
 
-  const onChangeSearchTitle = e => {
-    const searchTitle = e.target.value;
-    setSearchTitle(searchTitle);
-  };
+  //FETCHING LIST OF TOPICS BY CATEGORY_ID FROM PARENT
+  // const filterTopics
 
-  const initFetch = useCallback(() => {
-    dispatch(getTopics());
-  }, [dispatch])
+  if (filterTopics) {
+    topics=filterTopics;
+    // console.log("filterTopics 1: " + filterTopics  );
+  }
+
+  //HOW TO REPLACE topics with incoming filterTopics ??
+
+  // setTopics('1');
+
+  const [pagesPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    initFetch()
-  }, [initFetch])
+    const fetchData = async () => {
+      await getTopics();
+    };
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
 
-  const refreshData = () => {
-    setCurrentTopic(null);
-    setCurrentIndex(-1);
+  const indexOfLastPost = currentPage * pagesPerPage;
+  const indexOfFirstPost = indexOfLastPost - pagesPerPage;
+
+  const currentTopics = topics.slice(indexOfFirstPost, indexOfLastPost);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
-  const removeAllTopics = () => {
-    dispatch(deleteAllTopics())
-      .then(response => {
-        refreshData();
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  };
-
-  const findByTitle = () => {
-    refreshData();
-    dispatch(findTopicsByTitle({ title: searchTitle }));
-  };
+  // console.log(currentTopics);
 
   return (
-    <div className="list row">
-      
-      <div className="col-md-6">
-      <p className='mt-5'>Based on RTK. src/apps/topic/TopicsList.</p>
-        {/* showing {filter ? filteredTopics.length : topics.length}  */}
+    <>
+      {/* {isLoading && <div>Loading .... </div>} */}
 
-        <ul className="list-group">
-          
-          {!filter && topics &&
-            topics.map((topic, index) => (
-              <li
-                className={
-                  "list-group-item " + (index === currentIndex ? "active" : "")
-                }
-                onClick={() => setActiveTopic(topic, index)}
-                key={index}
-              >
-                {topic.title}
-              </li>
-            ))}
-            
+      <p className='mt-5 mb-3'>Showing x of total topics.</p>
+      <ul className="list-unstyled h-50 overflow-auto">
+        {currentTopics.map((topic) => (
+          <TopicItem 
+          key={topic.id} {...topic} 
+          getTopic={getTopic}
+          />
+        ))}
+      </ul>
 
-            {filter && filteredTopics && filteredTopics.map((topic, index) => (
-              <li
-                className={
-                  "list-group-item " + (index === currentIndex ? "active" : "")
-                }
-                onClick={() => setActiveTopic(topic, index)}
-                key={index}
-              >
-                {topic.title}
-              </li>
-            ))}
+      {currentTopics.length > 4 && (
+        <TopicPagination
+          count={topics.length}
+          paginate={paginate}
+          pagesPerPage={pagesPerPage}
+          currentPage={currentPage}
+        />
+      )}
 
-
-        </ul>
-      </div>
-    </div>
-
-
+    </>
   );
-};
-
-export default TopicsList;
+}

@@ -1,75 +1,48 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TopicsList from "./TopicsList";
-import TodoList from "./redux/TodoList";
 import TopicDetail from "./TopicDetail";
 import CategoriesList from "../../categories/CategoriesList";
-import axios from 'axios';
 import { skipToken } from "@reduxjs/toolkit/query";
+import { useGetTopicByIdQuery, useGetTopicsByCategoryIdQuery } from './services/topicApi';
 
-import { useGetTopicsByCategoryIdQuery } from './services/topicApi';
 
 const TopicApp = () => {
 
   //GENERAL
   const dispatch = useDispatch();
-  const apiUrl = "http://localhost:8080/api/topics/actions/read.php";
   const [errorMessage, setErrorMessage] = useState("");
   const [filter, setFilter] = useState(false);
-  
   const [filteredTopics, setFilteredTopics] = useState(null);
   const [currentCategory, setCurrentCategory] = useState(null);
   const [currentCategoryId, setCurrentCategoryId] = useState(null) // initialize with skipToken to skip at first
-  const [currentIndex, setCurrentIndex] = useState(-1);
-  const [currentTopic, setCurrentTopic] = useState(null);
+  const [currentTopicId, setCurrentTopicId] = useState(null);
 
-  const [interest, setInterest] = useState(null);
-  const [response, setResponse] = useState(null);
-  
+  /// ONCLICK CATEGORY FILTER
   const categoryChangeHandler = (category_id) => {
-
     if (category_id === 0) {
       setFilter(false);
     } else {
-
-      // dispatch(filterTopics({ category_id }));
-      // // console.log( filterTopics({ category_id }) );
-      // `https://jsonplaceholder.typicode.com/users`, { user }
-        axios.get(apiUrl, {
-          params: {
-            category_id: category_id
-          }}).then(res => {
-          const data = res.data;
-          // console.log("curr: " + apiUrl +currentCategory + " - " + data_topics +  JSON.stringify(res.data));
-          setFilteredTopics(data);
-        }).catch((err) => {
-          setFilteredTopics("");
-        });
       setFilter(true);
-      setCurrentIndex(-1);
-
       setCurrentCategory(category_id);
-      setCurrentCategoryId(category_id);
-  
-      // alert(category_id + currentCategoryId);
-  
-      // console.log("currentCategoryId 1: " + currentCategory);
-      // console.log("currentCategoryId 2: " + currentCategoryId);
+      setCurrentCategoryId(category_id); 
     }
   };
-    // console.log(filteredTopics);
-
-  const setActiveTopic = (topic, index) => {
-    // console.log("setActiveTopic: " + JSON.stringify(topic));
-    setCurrentTopic(topic);
-    setCurrentIndex(index);
-  };
-
-
-  // const { data, error, isLoading } = useGetTopicsByCategoryIdQuery({ category_id: 1 });
   const filteredTopics_rtk = useGetTopicsByCategoryIdQuery({ category_id: currentCategory })
   const filterTopics = filteredTopics_rtk['data'];
-  // console.log("filteredTopics2: " + filterTopics );
+
+
+  ////// GET TOPIC DETAIL
+  const getTopic = (id) => {
+    if (id === null) {
+      setCurrentTopicId(0);
+    } else {
+      /// FETCH TOPIC DETAILS
+      setCurrentTopicId(id);
+    }
+  };
+  const topicData_res = useGetTopicByIdQuery({ id: currentTopicId })
+  const topicData = topicData_res['data'];
 
 
   // if (isLoading) {
@@ -94,17 +67,13 @@ const TopicApp = () => {
         </div>
         <div className="title col-md-6">
           <TopicsList 
-            setActiveTopic={setActiveTopic}
-            filter={filter}
-            filteredTopics={filteredTopics}
-          />
-          <TodoList 
+            getTopic={getTopic}
             filterTopics={filterTopics}
           />
         </div>
         <div className="category col-md-3">
             <TopicDetail 
-              currentTopic={currentTopic}
+              currentTopic={topicData}
             />
         </div>
       </div>

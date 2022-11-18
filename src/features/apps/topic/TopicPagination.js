@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function TodoPagination({
+export default function TopicPagination({
   count,
   paginate,
   pagesPerPage,

@@ -21,10 +21,9 @@ const Navbar = () => {
           fontSize={{ base: "14px", md: "24px" }}
           fontWeight="700"
         >
-          Where in the world?
+          Contentify
         </Heading>
       </Link>
-      <ThemeButton />
     </Flex>
   );
 };
