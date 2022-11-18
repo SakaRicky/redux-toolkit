@@ -12,9 +12,7 @@ const TopicsList = ({ filter, filteredTopics, setActiveTopic, setCurrentTopic })
   const dispatch = useDispatch();
   const [searchTitle, setSearchTitle] = useState("");
   const topics = useSelector(state => state.topic);
-
   const [currentIndex, setCurrentIndex] = useState(-1);
-
   const [searchQuery, setSearchQuery] = useState("");
 
   const onChangeSearchTitle = e => {
@@ -55,7 +53,6 @@ const TopicsList = ({ filter, filteredTopics, setActiveTopic, setCurrentTopic })
       
       <div className="col-md-6">
       <p className='mt-5'>Based on RTK. src/apps/topic/TopicsList.</p>
-      <p className="mb-4">Category change is working here.</p>
         {/* showing {filter ? filteredTopics.length : topics.length}  */}
 
         <ul className="list-group">

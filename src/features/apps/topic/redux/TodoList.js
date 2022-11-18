@@ -7,18 +7,20 @@ import { useGetTopicsMutation } from '../services/topicApi';
 export default function TodoList({ filterTopics }) {
 
   //DEFAULT LIST OF ALL TOPICS
-  const topics = useSelector((state) => state.topics.topics);
+  let topics = useSelector((state) => state.topics.topics);
   const [getTopics, { isLoading }] = useGetTopicsMutation();
 
   //FETCHING LIST OF TOPICS BY CATEGORY_ID FROM PARENT
   // const filterTopics
 
+  if (filterTopics) {
+    topics=filterTopics;
+    // console.log("filterTopics 1: " + filterTopics  );
+  }
+
   //HOW TO REPLACE topics with incoming filterTopics ??
 
   // setTopics('1');
-
-
-  console.log("TODOS 1: " + topics );
 
   const [pagesPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,8 +49,6 @@ export default function TodoList({ filterTopics }) {
       {/* {isLoading && <div>Loading .... </div>} */}
 
       <p className='mt-5'>Based on RTK & RTK Query. src/apps/topic/redux/TodoList</p>
-      <p className="mb-4">Category change not yet implemented.</p>
-
       <ul className="list-unstyled h-50 overflow-auto">
         {currentTopics.map((topic) => (
           <TodoItem 

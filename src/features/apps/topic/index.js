@@ -18,8 +18,8 @@ const TopicApp = () => {
   const [filter, setFilter] = useState(false);
   
   const [filteredTopics, setFilteredTopics] = useState(null);
-  const [currentCategory, setCurrentCategory] = useState("");
-  const [currentCategoryId, setCurrentCategoryId] = useState(skipToken) // initialize with skipToken to skip at first
+  const [currentCategory, setCurrentCategory] = useState(null);
+  const [currentCategoryId, setCurrentCategoryId] = useState(null) // initialize with skipToken to skip at first
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentTopic, setCurrentTopic] = useState(null);
 
@@ -27,16 +27,11 @@ const TopicApp = () => {
   const [response, setResponse] = useState(null);
   
   const categoryChangeHandler = (category_id) => {
-    setCurrentCategory(category_id);
-    setCurrentCategoryId(category_id);
-
-    // alert(currentCategoryId);
-
-    console.log("currentCategoryId: " + category_id);
 
     if (category_id === 0) {
       setFilter(false);
     } else {
+
       // dispatch(filterTopics({ category_id }));
       // // console.log( filterTopics({ category_id }) );
       // `https://jsonplaceholder.typicode.com/users`, { user }
@@ -52,8 +47,15 @@ const TopicApp = () => {
         });
       setFilter(true);
       setCurrentIndex(-1);
-    }
 
+      setCurrentCategory(category_id);
+      setCurrentCategoryId(category_id);
+  
+      // alert(category_id + currentCategoryId);
+  
+      // console.log("currentCategoryId 1: " + currentCategory);
+      // console.log("currentCategoryId 2: " + currentCategoryId);
+    }
   };
     // console.log(filteredTopics);
 
@@ -63,13 +65,11 @@ const TopicApp = () => {
     setCurrentIndex(index);
   };
 
-  // console.log("currentCategoryId: " + currentCategoryId);
 
   // const { data, error, isLoading } = useGetTopicsByCategoryIdQuery({ category_id: 1 });
-  const filteredTopics2 = useGetTopicsByCategoryIdQuery(currentCategoryId)
-  const filterTopics = filteredTopics2['data'];
-
-  console.log("filteredTopics2: " + filterTopics );
+  const filteredTopics_rtk = useGetTopicsByCategoryIdQuery({ category_id: currentCategory })
+  const filterTopics = filteredTopics_rtk['data'];
+  // console.log("filteredTopics2: " + filterTopics );
 
 
   // if (isLoading) {
