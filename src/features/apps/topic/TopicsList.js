@@ -7,16 +7,15 @@ import {
 } from "./slices";
 import { Link } from "react-router-dom";
 
-const TopicsList = ({ filter, filteredTopics }) => {
+const TopicsList = ({ filter, filteredTopics, setActiveTopic, setCurrentTopic }) => {
 
   const dispatch = useDispatch();
-
-  const [currentTopic, setCurrentTopic] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(-1);
   const [searchTitle, setSearchTitle] = useState("");
+  const topics = useSelector(state => state.topic);
 
-  const topics = useSelector(state => state.topics);
-  console.log(filteredTopics);
+  const [currentIndex, setCurrentIndex] = useState(-1);
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   const onChangeSearchTitle = e => {
     const searchTitle = e.target.value;
@@ -36,11 +35,6 @@ const TopicsList = ({ filter, filteredTopics }) => {
     setCurrentIndex(-1);
   };
 
-  const setActiveTopic = (topic, index) => {
-    setCurrentTopic(topic);
-    setCurrentIndex(index);
-  };
-
   const removeAllTopics = () => {
     dispatch(deleteAllTopics())
       .then(response => {
@@ -58,35 +52,14 @@ const TopicsList = ({ filter, filteredTopics }) => {
 
   return (
     <div className="list row">
-      <div className="col-md-12">
-        <div className="input-group mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search by title"
-            value={searchTitle}
-            onChange={onChangeSearchTitle}
-          />
-          <div className="input-group-append">
-            <button
-              className="btn btn-outline-secondary"
-              type="button"
-              onClick={findByTitle}
-            >
-              Search
-            </button>
-          </div>
-        </div>
-      </div>
-
+      
       <div className="col-md-6">
-      <p>
-        showing {filter ? filteredTopics.length : topics.length} topics of total{" "}
-        {topics.length} topics
-      </p>
+      <p className='mt-5'>Based on RTK. src/apps/topic/TopicsList.</p>
+      <p className="mb-4">Category change is working here.</p>
+        {/* showing {filter ? filteredTopics.length : topics.length}  */}
 
-        <h4>Topics List</h4>
         <ul className="list-group">
+          
           {!filter && topics &&
             topics.map((topic, index) => (
               <li
@@ -99,9 +72,9 @@ const TopicsList = ({ filter, filteredTopics }) => {
                 {topic.title}
               </li>
             ))}
+            
 
-            {filter && topics &&
-            filteredTopics.map((topic, index) => (
+            {filter && filteredTopics && filteredTopics.map((topic, index) => (
               <li
                 className={
                   "list-group-item " + (index === currentIndex ? "active" : "")
@@ -113,54 +86,9 @@ const TopicsList = ({ filter, filteredTopics }) => {
               </li>
             ))}
 
+
         </ul>
-
-        <button
-          className="m-3 btn btn-sm btn-danger"
-          onClick={removeAllTopics}
-        >
-          Remove All
-        </button>
       </div>
-
-      <div className="col-md-6">
-        {currentTopic ? (
-          <div>
-            <h4>Topic</h4>
-            <div>
-              <label>
-                <strong>Title:</strong>
-              </label>{" "}
-              {currentTopic.title}
-            </div>
-            <div>
-              <label>
-                <strong>Description:</strong>
-              </label>{" "}
-              {currentTopic.description}
-            </div>
-            <div>
-              <label>
-                <strong>Status:</strong>
-              </label>{" "}
-              {currentTopic.published ? "Published" : "Pending"}
-            </div>
-
-            <Link
-              to={"/topics/" + currentTopic.id}
-              className="badge badge-warning"
-            >
-              Edit
-            </Link>
-          </div>
-        ) : (
-          <div>
-            <br />
-            <p>Please click on a Topic...</p>
-          </div>
-        )}
-      </div>
-      
     </div>
 
 

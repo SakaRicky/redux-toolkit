@@ -1,4 +1,25 @@
+https://www.reddit.com/r/reactjs/comments/rz8928/can_anyone_share_a_project_repo_that_uses_react/
+https://medium.com/@jdhawks/redux-toolkit-and-rtk-query-with-react-js-14e34be65622
+https://github.com/AlexNti/coin_market/tree/master/src
+
+Pagination
+
+https://github.com/alan2207/bulletproof-react/blob/master/src/features/comments/components/CommentsList.tsx
+
+https://stackoverflow.com/questions/69499487/rtk-query-pagination-and-combine-queries
+
+https://hemanta.io/implement-pagination-search-and-filter-in-a-react-app-part-3/
+
+https://stackblitz.com/edit/react-jh83ue?file=src%2Fcomponents%2FTodoList.js,src%2Fredux%2Fslices%2FtodoSlice.js
+
+condition ? <ConditionalComponent /> : null;
+
+https://7dec9s.csb.app/
+
 Filter
+
+https://codesandbox.io/s/countrieslist-rtk-query-b1ix4d?file=/src/App.js
+https://github.com/aroyan/countries-lists/blob/dev/src/features/countries.js
 
 https://stackoverflow.com/questions/74328848/how-to-filters-by-category-using-redux-toolkit-in-reactjs
 

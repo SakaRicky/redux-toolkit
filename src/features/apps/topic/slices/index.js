@@ -1,21 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import TopicApiService from "../services";
+import topicApi from "../services";
 
 const initialState = [];
 
 export const getTopics = createAsyncThunk(
   "topics/get",
   async () => {
-    const res = await TopicApiService.getAll();
-    // console.log(res.data['topics']);
-    return res.data['topics'];
+    const res = await topicApi.getAll();
+    console.log(res.data);
+    return res.data;
   }
 );
 
 export const createTopic = createAsyncThunk(
   "topics/create",
   async ({ title, description }) => {
-    const res = await TopicApiService.create({ title, description });
+    const res = await topicApi.create({ title, description });
     return res.data;
   }
 );
@@ -23,7 +23,7 @@ export const createTopic = createAsyncThunk(
 export const updateTopic = createAsyncThunk(
   "topics/update",
   async ({ id, data }) => {
-    const res = await TopicApiService.update(id, data);
+    const res = await topicApi.update(id, data);
     return res.data;
   }
 );
@@ -31,7 +31,7 @@ export const updateTopic = createAsyncThunk(
 export const deleteTopic = createAsyncThunk(
   "topics/delete",
   async ({ id }) => {
-    await TopicApiService.remove(id);
+    await topicApi.remove(id);
     return { id };
   }
 );
@@ -39,7 +39,7 @@ export const deleteTopic = createAsyncThunk(
 export const deleteAllTopics = createAsyncThunk(
   "topics/deleteAll",
   async () => {
-    const res = await TopicApiService.removeAll();
+    const res = await topicApi.removeAll();
     return res.data;
   }
 );
@@ -47,7 +47,7 @@ export const deleteAllTopics = createAsyncThunk(
 export const findTopicsByTitle = createAsyncThunk(
   "topics/findByTitle",
   async ({ title }) => {
-    const res = await TopicApiService.findByTitle(title);
+    const res = await topicApi.findByTitle(title);
     return res.data;
   }
 );
@@ -56,9 +56,9 @@ export const filterTopics = createAsyncThunk(
   "topics/filter",
   async ({ category_id }) => {
     // console.log(" Cat ID: " + category_id);
-    const res = await TopicApiService.getAll(category_id);
+    const res = await topicApi.getAll(category_id);
     // console.log( res.data['topics'] );
-    return res.data['topics'];
+    return res.data;
   }
 );
 

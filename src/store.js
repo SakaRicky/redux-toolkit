@@ -1,15 +1,26 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { setupListeners } from "@reduxjs/toolkit/query";
+import { countriesApi } from "./features/countries";
+
 import topicReducer from './features/apps/topic/slices';
 import categoryReducer from './features/categories/categorySlice';
 
+import topicSlice from './features/apps/topic/slices/topicSlice';
+import { topicApi } from './features/apps/topic/services/topicApi';
+
 const reducer = {
-  topics: topicReducer,
-  categories: categoryReducer
+  topic: topicReducer,
+  categories: categoryReducer,
+  topics: topicSlice,
+  [countriesApi.reducerPath]: countriesApi.reducer,
+  [topicApi.reducerPath]: topicApi.reducer,
 }
 
-const store = configureStore({
+export const store = configureStore({
   reducer: reducer,
   devTools: true,
-})
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(countriesApi.middleware).concat(topicApi.middleware)
+});
 
-export default store;
+setupListeners(store.dispatch);

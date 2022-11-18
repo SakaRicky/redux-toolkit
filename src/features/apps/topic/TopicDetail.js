@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 
-const TopicDetail = ( ) => {
+const TopicDetail = ({ currentTopic }) => {
+
+
 
   return (
-      
-      <div className="col-md-6">
+      <div className="col-md-6 mt-4">
         {currentTopic ? (
           <div>
-            <h4>Topic</h4>
             <div>
               <label>
                 <strong>Title:</strong>
@@ -35,10 +35,8 @@ const TopicDetail = ( ) => {
             </Link>
           </div>
         ) : (
-          <div>
-            <br />
-            <p>Please click on a Topic...</p>
-          </div>
+          <>
+          </>
         )}
       </div>
     
