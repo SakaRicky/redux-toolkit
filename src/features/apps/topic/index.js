@@ -19,42 +19,6 @@ const TopicApp = () => {
   const [currentCategoryId, setCurrentCategoryId] = useState(null) // initialize with skipToken to skip at first
   const [currentTopicId, setCurrentTopicId] = useState(null);
 
-  const { data } = useTopicsQuery();
-  console.log("data: " + JSON.stringify(data));
-
-  const userId = useState(1);
-
-  console.log("userId: " + userId);
-
-  /// NEW FUNCTION
-  const selectTopicsForCategory = useMemo(() => {
-    const emptyArray = []
-    // Return a unique selector instance for this page so that
-    // the filtered results are correctly memoized
-    return createSelector(
-      res => res.data,
-      (res, userId) => userId,
-      (data, userId) => data?.filter(topic => topic.category_id === userId) ?? emptyArray
-    )
-  }, [])
-
-  
-  // Use the same posts query, but extract only part of its data
-  const { topicsForCategory } = useTopicsQuery(undefined, {
-    selectFromResult: result => ({
-      // We can optionally include the other metadata fields from the result here
-      ...result,
-      // Include a field called `topicsForCategory` in the hook result object,
-      // which will be a filtered list of posts
-      topicsForCategory: selectTopicsForCategory(result, userId)
-    })
-  })
-  /// NEW FUNCTION
-
-  console.log("topicsForCategory: " + topicsForCategory);
-
-
-
   /// ONCLICK CATEGORY FILTER
   const categoryChangeHandler = (category_id) => {
     if (category_id === 0) {
@@ -79,8 +43,7 @@ const TopicApp = () => {
     }
   };
   const topicData_res = useGetTopicByIdQuery({ id: currentTopicId })
-  const topicData = topicData_res['data'];
-
+  const currentTopic = topicData_res.data;
 
   // if (isLoading) {
   //   return <div>Loading...</div>;
@@ -109,9 +72,14 @@ const TopicApp = () => {
           />
         </div>
         <div className="category col-md-5">
+          { currentTopic ? ( 
             <TopicDetail 
-              currentTopic={topicData}
+              // {...currentTopic} 
+              currentTopic={currentTopic}
             />
+            ) : ''
+          }
+
         </div>
       </div>
     </div>

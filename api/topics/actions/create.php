@@ -1,10 +1,15 @@
 <?php
-    header("Access-Control-Allow-Origin: *");
-    header("Content-Type: application/json; charset=UTF-8");
-    header("Access-Control-Allow-Methods: POST");
-    header("Access-Control-Max-Age: 3600");
-    header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-    header("HTTP/1.0 200 OK");  // <------- update it HTTP/1.0 200 OK
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Methods: HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization");
+header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
+   header('Access-Control-Allow-Origin: *');
+   header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization");
+   header("HTTP/1.1 200 OK");
+   die();
+}
 
     include_once ('../../config/database.php');
     include_once '../Topic.php';

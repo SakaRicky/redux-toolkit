@@ -6,6 +6,10 @@ export const topicApi = createApi({
   baseQuery: fetchBaseQuery({
     // baseUrl: 'https://jsonplaceholder.typicode.com',
     baseUrl: 'http://localhost:8080/api/topics/actions',
+    prepareHeaders: (headers, { getState }) => {
+      headers.set("Content-Type", "application/json");
+      return headers;
+    }
   }),
   endpoints: (builder) => ({
     getTopics: builder.mutation({
@@ -36,17 +40,19 @@ export const topicApi = createApi({
       }),
       invalidatesTags: ["Task"]
     }),
-    updateTopic: builder.mutation({
-      query: ({ id, ...rest }) => ({
-        url: `/update.php?${id}`,
-        method: "PUT",
-        body: rest
-      }),
-      invalidatesTags: ["Topic"]
+    updateTopic: builder.mutation({    // <-- attention here
+      query: ({ id, ...rest }) => {
+        console.log(123, id, rest);
+        return {
+          url: `/update.php?id=${id}`,
+          method: "POST",
+          body: rest
+        };
+      }
     }),
     deleteTopic: builder.mutation({
       query: (id) => ({
-        url: `/delete.php?${id}`,
+        url: `/delete.php?id=${id}`,
         method: "DELETE"
       }),
       invalidatesTags: ["Topic"]

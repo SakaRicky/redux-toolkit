@@ -17,6 +17,7 @@ export default function TopicPagination({
         {[...new Array(pagesCount)].map((_, i) => (
           <Pagination.Item
             key={i}
+            className="mt-4"
             active={i + 1 === currentPage}
             onClick={() => onPageNumberClick(i + 1)}
           >

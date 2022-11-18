@@ -1,4 +1,6 @@
 RTK QUERY
+https://stackblitz.com/edit/react-jh83ue?file=src%2Fcomponents%2FTodoList.js,src%2Fredux%2Fslices%2FtodoSlice.js
+
 https://blog.openreplay.com/fetching-data-in-redux-using-rtk-query/
 
 https://redux.js.org/tutorials/essentials/part-8-rtk-query-advanced#comparing-transformation-approaches
@@ -9,7 +11,7 @@ https://github.com/AlexNti/coin_market/tree/master/src
 
 Pagination
 
-https://github.com/alan2207/bulletproof-react/blob/master/src/features/comments/components/CommentsList.tsx
+https://github.com/alan2207/bulletproof-react/
 
 https://stackoverflow.com/questions/69499487/rtk-query-pagination-and-combine-queries
 
