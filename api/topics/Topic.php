@@ -7,7 +7,7 @@
         private $conn;
 
         // Table
-        private $db_table = "tutorials";
+        private $db_table = "topics";
         
         // Columns
         public $id;
@@ -22,7 +22,17 @@
         
         // GET ALL
         public function getAll(){
-            $sqlQuery = "SELECT id, title, description, published, createdAt FROM " . $this->db_table . "";
+            $WHERE_QUERY='';
+
+            /// FILTER BY CATEGORY_ID
+            if(!empty($this->category_id)){
+                $this->category_id = htmlspecialchars(strip_tags($this->category_id));
+
+                $WHERE_QUERY = " WHERE category_id=" . $this->category_id;
+            }
+
+            $sqlQuery = "SELECT id, title, category_id, description, published, createdAt FROM " . $this->db_table . $WHERE_QUERY . " LIMIT 0, 20" ;
+
             $stmt = $this->conn->prepare($sqlQuery);
             $stmt->execute();
             return $stmt;

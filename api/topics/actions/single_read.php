@@ -14,15 +14,17 @@
     $item->id = isset($_GET['id']) ? $_GET['id'] : die();
     $item->getSingle();
 
-    if($item->title != null){    
-        $itemRecords = array(
+    if($item->title != null){
+        $itemRecords = array();
+        $e = array(
             "id" =>  $item->id,
             "title" => $item->title,
             "description" => $item->description,
             "published" => $item->published,
             "createdAt" => $item->createdAt
         );
-        http_response_code(200);     
+        http_response_code(200);
+        array_push($itemRecords, $e);
         echo json_encode($itemRecords);
     }else{     
         http_response_code(404);     
