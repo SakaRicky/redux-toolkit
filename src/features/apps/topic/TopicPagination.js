@@ -25,6 +25,7 @@ export default function TopicPagination({
           </Pagination.Item>
         ))}
       </Pagination>
+
     </>
   );
 }

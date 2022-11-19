@@ -14,6 +14,7 @@ const Navbar = () => {
       align="center"
       px={{ base: "1rem", md: "20" }}
       boxShadow="sm"
+      className="mb-4"
     >
       <Link to="/">
         <Heading
