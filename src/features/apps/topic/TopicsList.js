@@ -18,7 +18,7 @@ import {
   Checkbox
 } from "@chakra-ui/react";
 import Pagination from "@choc-ui/paginator";
-import { Filter } from 'react-feather';
+import { Filter, Edit } from 'react-feather';
 export default function TopicsList({ filterTopics, getTopic }) {
 
   //DEFAULT LIST OF ALL TOPICS
@@ -80,20 +80,34 @@ export default function TopicsList({ filterTopics, getTopic }) {
       {/* <Heading top={0} bg="blackAlpha.300" w="full" p={15} pos="fixed">
         Page {current}{" "}
       </Heading> */}
+      <div className='row container'>
+        <div className='col-md-9'>
+          <Heading
+            as="h1"
+            fontSize={{ base: "14px", md: "24px" }}
+            fontWeight="700"
+          >
+            Topics
+          </Heading>
 
-        <Heading
-          as="h1"
-          fontSize={{ base: "14px", md: "24px" }}
-          fontWeight="700"
-        >
-          Topics
-        </Heading>
-      <input name="search" type="text" className='mt-0 form-control m-1' placeholder='search topics' />
+        </div>
+        <div className='col-md-3'>
+          <Button
+            leftIcon={<Edit size="15" />}
+            colorScheme='blue'
+            size='sm'>
+            Compose
+          </Button>          
+        </div>
+      </div>
+
+
+      <input name="search" type="text" className='mt-3 form-control' placeholder='search topics' />
 
       <p className='mt-3 mb-1 small text-muted'>Showing {indexOfFirstPost + 1} - {indexOfLastPost} of {topics.length} topics.</p>
 
       <Table
-        maxW="98%"
+        maxW="100%"
         m={0}
         mt={2}
         shadow="base"
