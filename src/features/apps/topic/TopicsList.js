@@ -90,18 +90,7 @@ export default function TopicsList({ filterTopics, getTopic }) {
         </Heading>
       <input name="search" type="text" className='mt-0 form-control m-1' placeholder='search topics' />
 
-      <div className="row justify-content-center mt-4 mb-2">
-        <div className='col-md-9'>
-          <Checkbox>toggleSelect</Checkbox>
-        </div>
-        <div className='col-md-3 pull-right small'>
-          <Filter
-            size={22}
-           /> 
-        </div>
-      </div>
-
-      <p className='mt-3 mb-1'>Showing {indexOfFirstPost + 1} - {indexOfLastPost} of {topics.length} topics.</p>
+      <p className='mt-3 mb-1 small text-muted'>Showing {indexOfFirstPost + 1} - {indexOfLastPost} of {topics.length} topics.</p>
 
       <Table
         maxW="98%"
@@ -141,13 +130,26 @@ export default function TopicsList({ filterTopics, getTopic }) {
         </TableCaption>
         <Thead>
           <Tr>
-            <Th>Title</Th>
+            <Th width="2">
+              <Checkbox></Checkbox>
+            </Th>
+            <Th></Th>
+            <Th 
+              className='small'
+              width="10">
+              <Filter
+                size={16}
+              /> 
+            </Th>
           </Tr>
         </Thead>
         <Tbody>
           {new_topics.map((topic) => (
             <Tr key={topic.id}>
-              <Td onClick={() => getTopic(topic.id)}> {topic.title} </Td>
+              <Td colspan="3" onClick={() => getTopic(topic.id)}> 
+              <span>{topic.title} </span> 
+              <span className='badge badge-info small'>{topic.post_status}</span>
+              </Td>
             </Tr>
           ))}
         </Tbody>
