@@ -80,8 +80,8 @@ export default function TopicsList({ filterTopics, getTopic }) {
       {/* <Heading top={0} bg="blackAlpha.300" w="full" p={15} pos="fixed">
         Page {current}{" "}
       </Heading> */}
-      <div className='row container'>
-        <div className='col-md-9'>
+      <div className='row'>
+        <div className='col-md-6'>
           <Heading
             as="h1"
             fontSize={{ base: "14px", md: "24px" }}
@@ -91,7 +91,7 @@ export default function TopicsList({ filterTopics, getTopic }) {
           </Heading>
 
         </div>
-        <div className='col-md-3'>
+        <div className='col-md-6'>
           <Button
             leftIcon={<Edit size="15" />}
             colorScheme='blue'

@@ -6,10 +6,17 @@ import CategoriesList from "../../categories/CategoriesList";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { createSelector } from '@reduxjs/toolkit'
 import { useTopicsQuery, useGetTopicsMutation, useGetTopicByIdQuery, useGetTopicsByCategoryIdQuery } from './services/topicApi';
-
+import { Grid, GridItem } from '@chakra-ui/react';
+import { Tabs, Typography, Row, Col, Avatar, Card, Button, Switch } from 'antd';
 
 const TopicApp = () => {
 
+
+    //@antd
+    const { Meta } = Card;
+    const { Title } = Typography;
+    const { TabPane } = Tabs;
+    
   //GENERAL
   const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState("");
@@ -56,33 +63,69 @@ const TopicApp = () => {
 
 
   return (
-    <div className="container">
-      <div className="row justify-content-center">
-        {errorMessage}
-        <div className="category col-md-3">
-            <CategoriesList 
+
+    <Grid
+      w='94%'
+      h='300px'
+      templateRows='repeat(1, 1fr)'
+      templateColumns='repeat(7, 1fr)'
+      mt='0'
+      ml="66"
+      gap={3}
+    >
+      <GridItem colSpan={2} boxShadow="lg" p="0" bg="white" mt="-6" h='600px'>
+          <CategoriesList 
               currentCategory={currentCategory}
               categoryChangeHandler={categoryChangeHandler}
             />
-        </div>
-        <div className="title col-md-4">
           <TopicsList 
             getTopic={getTopic}
             filterTopics={filterTopics}
           />
-        </div>
-        <div className="category col-md-5">
-          { currentTopic ? ( 
+      </GridItem>
+
+      <GridItem colSpan={3} p="3">
+      { currentTopic ? ( 
             <TopicDetail 
               // {...currentTopic} 
               currentTopic={currentTopic}
             />
             ) : ''
           }
+      </GridItem>
 
-        </div>
-      </div>
-    </div>
+      <GridItem colSpan={2} h='620px' mr="-2">
+
+        <Card hoverable="true" style={{ border:2, width: 300, marginTop: 16 }}>
+            <Row>
+              <Col span={4}>
+                <Avatar src="https://joeschmoe.io/api/v1/random" />
+                </Col>
+              <Col span={20}>
+                <Title level={5}>Topic author</Title>
+                <p className="text-muted">Not assigned to any user. <Button>Invite!</Button></p>
+              </Col>
+            </Row>
+        </Card>
+
+        <Card hoverable="true" style={{ border:2, width: 300, marginTop: 16 }}>
+          <Tabs>
+          <TabPane tab="Title 1" key="1">
+            <p>Search Bar <br/> Switch detail view<br/> Filter <br/> Listing with scrollable <br/> <h3>Html Content</h3></p>
+          </TabPane>
+          <TabPane tab="Tab 2" key="2">
+            <p>Content of Tab Pane 2</p>
+          </TabPane>
+          <TabPane tab="Tab 3" key="3">
+            <p>Content of Tab Pane 3</p>
+          </TabPane>
+          </Tabs>
+        </Card>
+      </GridItem>
+    </Grid>
+
+
+    
   );
 
 };
