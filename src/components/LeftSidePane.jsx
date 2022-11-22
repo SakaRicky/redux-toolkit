@@ -1,21 +1,14 @@
 import { Box, Button, Heading, Select, Stack } from "@chakra-ui/react";
 import React from "react";
+import TopicsList from "../features/apps/topic/TopicsList";
+import CategoriesList from "../features/categories/CategoriesList";
 
 const LeftSidePane = ({
 	showLeftSidebar,
 	setShowLeftSidebar,
 	setShowRightSidebar,
+	children,
 }) => {
-	const categoriesOptions = [
-		{ value: "all", label: "All" },
-		{ value: "seo", label: "SEO" },
-		{ value: "googleAds", label: "Google Ads" },
-		{ value: "socialMedia", label: "Social Media" },
-		{ value: "emailMarketing", label: "Email Marketing" },
-		{ value: "pageOptimization", label: "Page Optimization" },
-		{ value: "inboundMarketing", label: "Inbound Marketing" },
-		{ value: "videoMarketing", label: "Video Marketing" },
-	];
 	return (
 		<Box w="100%">
 			<Box
@@ -67,24 +60,7 @@ const LeftSidePane = ({
 					</svg>
 				)}
 			</Box>
-			<Box>
-				<Select placeholder="Select Category" size="md" variant="outline">
-					{categoriesOptions.map(option => (
-						<option
-							key={option.value}
-							value={option.value}
-							label={option.label}
-						></option>
-					))}
-				</Select>
-				<Button colorScheme="blue">Button</Button>
-				<Stack spacing={3}>
-					<Select variant="outline" placeholder="Outline" />
-					<Select variant="filled" placeholder="Filled" />
-					<Select variant="flushed" placeholder="Flushed" />
-					<Select variant="unstyled" placeholder="Unstyled" />
-				</Stack>
-			</Box>
+			<Box>{children}</Box>
 		</Box>
 	);
 };

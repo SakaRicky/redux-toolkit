@@ -1,6 +1,5 @@
 import { Heading, Flex, useColorModeValue } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import ThemeButton from "./ThemeButton";
 
 const Toolbar = () => {
 	const navColor = useColorModeValue("#fff", "#2B3743");

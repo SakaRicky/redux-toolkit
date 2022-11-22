@@ -5,23 +5,26 @@ const RightSidePane = ({
 	showRightSidebar,
 	setShowLeftSidebar,
 	setShowRightSidebar,
+	children,
 }) => {
 	return (
 		<Box w="100%">
 			<Heading as="h3" size="lg">
 				RightSidePane
 			</Heading>
-			<Button
+			<Box
 				pos="absolute"
 				top="30%"
 				right="96%"
-				w={showRightSidebar ? 30 : 70}
-				ml={showRightSidebar ? 10 : 0}
-				height={30}
-				p={showRightSidebar ? 4 : 0}
+				w={showRightSidebar ? 35 : 70}
+				height={35}
+				p={showRightSidebar ? 2 : 0}
+				display="flex"
+				alignItems="center"
 				bg="#fff"
 				border="1px solid #808080"
-				borderRadius="50px"
+				cursor="pointer"
+				borderRadius={showRightSidebar ? "50%" : "50px"}
 				onClick={() => {
 					setShowRightSidebar(!showRightSidebar);
 					setShowLeftSidebar(false);
@@ -34,7 +37,6 @@ const RightSidePane = ({
 						viewBox="0 0 24 24"
 						strokeWidth={1.5}
 						stroke="currentColor"
-						className="w-6 h-6"
 					>
 						<path
 							strokeLinecap="round"
@@ -58,7 +60,8 @@ const RightSidePane = ({
 						/>
 					</svg>
 				)}
-			</Button>
+			</Box>
+			<Box>{children}</Box>
 		</Box>
 	);
 };

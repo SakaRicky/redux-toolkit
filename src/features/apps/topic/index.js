@@ -93,13 +93,10 @@ const TopicApp = () => {
 	const [showLeftSidebar, setShowLeftSidebar] = useState(false);
 	const [showRightSidebar, setShowRightSidebar] = useState(false);
 
-	console.log("showLeftSidebar: ", showLeftSidebar);
-
 	return (
 		<Box bg="blue.600" pos="relative" h="100%">
 			{" "}
-			{/** overflow="hidden" */}
-			<Flex w="100%" h="100%" mt="1px" gap={2} pos="relative">
+			<Flex w="100%" h="100%" mt="1px" gap={2} pos="relative" overflow="hidden">
 				<Box
 					as="aside"
 					boxShadow="2xl"
@@ -109,8 +106,8 @@ const TopicApp = () => {
 					pos="absolute"
 					top={0}
 					left={showLeftSidebar ? 0 : "-30%"}
-					transition="all 0.2s ease-in"
 					bottom={0}
+					transition="all 0.2s ease-in"
 					zIndex={1}
 				>
 					<LeftSidePane
@@ -139,9 +136,14 @@ const TopicApp = () => {
 						<Heading as="h3" size="2xl">
 							Main Content Area
 						</Heading>
-						<Heading as="h3" size="2xl">
-							Right Side
-						</Heading>
+						{currentTopic ? (
+							<TopicDetail
+								// {...currentTopic}
+								currentTopic={currentTopic}
+							/>
+						) : (
+							""
+						)}
 					</Flex>
 				</Box>
 				<Box
@@ -164,7 +166,45 @@ const TopicApp = () => {
 						setShowLeftSidebar={setShowLeftSidebar}
 						setShowRightSidebar={setShowRightSidebar}
 						showRightSidebar={showRightSidebar}
-					/>
+					>
+						<Card
+							hoverable="true"
+							style={{ border: 2, width: 300, marginTop: 16 }}
+						>
+							<Row>
+								<Col span={4}>
+									<Avatar src="https://joeschmoe.io/api/v1/random" />
+								</Col>
+								<Col span={20}>
+									<Title level={5}>Topic author</Title>
+									<p className="text-muted">
+										Not assigned to any user. <Button>Invite!</Button>
+									</p>
+								</Col>
+							</Row>
+						</Card>
+
+						<Card
+							hoverable="true"
+							style={{ border: 2, width: 300, marginTop: 16 }}
+						>
+							<Tabs>
+								<TabPane tab="Title 1" key="1">
+									<p>
+										Search Bar <br /> Switch detail view
+										<br /> Filter <br /> Listing with scrollable <br />{" "}
+										<h3>Html Content</h3>
+									</p>
+								</TabPane>
+								<TabPane tab="Tab 2" key="2">
+									<p>Content of Tab Pane 2</p>
+								</TabPane>
+								<TabPane tab="Tab 3" key="3">
+									<p>Content of Tab Pane 3</p>
+								</TabPane>
+							</Tabs>
+						</Card>
+					</RightSidePane>
 				</Box>
 			</Flex>
 		</Box>
@@ -172,67 +212,3 @@ const TopicApp = () => {
 };
 
 export default TopicApp;
-
-// return (
-
-//     <Grid
-//       w='94%'
-//       h='300px'
-//       templateRows='repeat(1, 1fr)'
-//       templateColumns='repeat(7, 1fr)'
-//       mt='0'
-//       ml="66"
-//       gap={3}
-//     >
-//       <GridItem colSpan={2} boxShadow="lg" p="0" bg="white" mt="-6" h='600px'>
-//           <CategoriesList
-//               currentCategory={currentCategory}
-//               categoryChangeHandler={categoryChangeHandler}
-//             />
-//           <TopicsList
-//             getTopic={getTopic}
-//             filterTopics={filterTopics}
-//           />
-//       </GridItem>
-
-//       <GridItem colSpan={3} p="3">
-//       { currentTopic ? (
-//             <TopicDetail
-//               // {...currentTopic}
-//               currentTopic={currentTopic}
-//             />
-//             ) : ''
-//           }
-//       </GridItem>
-
-//       <GridItem colSpan={2} h='620px' mr="-2">
-
-//         <Card hoverable="true" style={{ border:2, width: 300, marginTop: 16 }}>
-//             <Row>
-//               <Col span={4}>
-//                 <Avatar src="https://joeschmoe.io/api/v1/random" />
-//                 </Col>
-//               <Col span={20}>
-//                 <Title level={5}>Topic author</Title>
-//                 <p className="text-muted">Not assigned to any user. <Button>Invite!</Button></p>
-//               </Col>
-//             </Row>
-//         </Card>
-
-//         <Card hoverable="true" style={{ border:2, width: 300, marginTop: 16 }}>
-//           <Tabs>
-//           <TabPane tab="Title 1" key="1">
-//             <p>Search Bar <br/> Switch detail view<br/> Filter <br/> Listing with scrollable <br/> <h3>Html Content</h3></p>
-//           </TabPane>
-//           <TabPane tab="Tab 2" key="2">
-//             <p>Content of Tab Pane 2</p>
-//           </TabPane>
-//           <TabPane tab="Tab 3" key="3">
-//             <p>Content of Tab Pane 3</p>
-//           </TabPane>
-//           </Tabs>
-//         </Card>
-//       </GridItem>
-//     </Grid>
-
-//   );
