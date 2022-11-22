@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TopicsList from "./TopicsList";
 import TopicDetail from "./TopicDetail";
@@ -11,8 +11,10 @@ import {
 	useGetTopicByIdQuery,
 	useGetTopicsByCategoryIdQuery,
 } from "./services/topicApi";
-import { Container, Box } from "@chakra-ui/react";
+import { Container, Box, Heading, Flex, Button } from "@chakra-ui/react";
 import Category from "./Category";
+import LeftSidePane from "../../../components/LeftSidePane";
+import RightSidePane from "../../../components/RightSidePane";
 
 const TopicApp = () => {
 	//GENERAL
@@ -60,34 +62,77 @@ const TopicApp = () => {
 
 	// console.log("useGetTopicsByCategoryIdQuery: " + JSON.stringify(data));
 
-	const [topicActive, setTopicActive] = useState(false);
-	const [categoryActive, setCategoryActive] = useState(false);
+	const [showLeftSidebar, setShowLeftSidebar] = useState(false);
+	const [showRightSidebar, setShowRightSidebar] = useState(false);
+
+	console.log("showLeftSidebar: ", showLeftSidebar);
 
 	return (
-		<Box bg="blue.600">
-			{/* <CategoriesList
-				setTopicActive={setTopicActive}
-				setCategoryActive={setCategoryActive}
-				currentCategory={currentCategory}
-				categoryChangeHandler={categoryChangeHandler}
-			/>
-			<TopicsList
-				topicActive={topicActive}
-				setTopicActive={setTopicActive}
-				setCategoryActive={setCategoryActive}
-				getTopic={getTopic}
-				filterTopics={filterTopics}
-			/>
-			<Category
-				categoryActive={categoryActive}
-				setCategoryActive={setCategoryActive}
-			/>
-			{currentTopic ? (
-				<TopicDetail {...currentTopic} currentTopic={currentTopic} />
-			) : (
-				""
-			)} */}
-			Topic
+		<Box bg="blue.600" pos="relative" h="100%">
+			{" "}
+			{/** overflow="hidden" */}
+			<Flex w="100%" h="100%" mt="1px" gap={2} pos="relative">
+				<Box
+					as="aside"
+					boxShadow="2xl"
+					p="2rem"
+					bg="white"
+					w="30%"
+					pos="absolute"
+					top={0}
+					left={showLeftSidebar ? 0 : "-30%"}
+					transition="all 0.2s ease-in"
+					bottom={0}
+					zIndex={1}
+				>
+					<LeftSidePane
+						setShowLeftSidebar={setShowLeftSidebar}
+						setShowRightSidebar={setShowRightSidebar}
+						showLeftSidebar={showLeftSidebar}
+					/>
+				</Box>
+				<Box
+					boxShadow="lg"
+					p="6"
+					pos="relative"
+					backgroundColor="#e8e8e8"
+					flexGrow={1}
+					ml={showLeftSidebar ? "30%" : "0"}
+					mr={showRightSidebar ? "30%" : "0"}
+					transition="all 0.2s ease-out"
+				>
+					<Flex justifyContent="space-between">
+						<Heading as="h3" size="2xl">
+							Main Content Area
+						</Heading>
+						<Heading as="h3" size="2xl">
+							Right Side
+						</Heading>
+					</Flex>
+				</Box>
+				<Box
+					key="right-pane"
+					as="aside"
+					initial={{ x: 500, opacity: 1 }}
+					animate={{ x: 0, opacity: 1 }}
+					exit={{ x: 500, opacity: 0 }}
+					boxShadow="lg"
+					p="6"
+					bg="white"
+					w="30%"
+					pos="absolute"
+					top={0}
+					right={showRightSidebar ? 0 : "-30%"}
+					transition="all 0.2s ease-in"
+					bottom={0}
+				>
+					<RightSidePane
+						setShowLeftSidebar={setShowLeftSidebar}
+						setShowRightSidebar={setShowRightSidebar}
+						showRightSidebar={showRightSidebar}
+					/>
+				</Box>
+			</Flex>
 		</Box>
 	);
 };

@@ -12,7 +12,7 @@ const Toolbar = () => {
 			justify="space-between"
 			align="center"
 			p="15px 20px"
-			boxShadow="dark-lg"
+			height="100%"
 		>
 			<Link to="/">
 				<Heading as="h1" fontSize="24px" fontWeight="700" color="gray.500">
