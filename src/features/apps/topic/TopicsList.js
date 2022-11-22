@@ -1,17 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import { useSelector } from "react-redux";
 import TopicItem from "./TopicItem";
 import TopicPagination from "./TopicPagination";
 import { useGetTopicsMutation } from "./services/topicApi";
-import { Box, Heading, Text } from "@chakra-ui/react";
-
-export default function TopicsList({
-	filterTopics,
-	getTopic,
-	topicActive,
-	setTopicActive,
-	setCategoryActive,
-}) {
+import {
+	Table,
+	Thead,
+	Tbody,
+	Button,
+	Heading,
+	Tr,
+	Th,
+	Td,
+	TableCaption,
+	Spinner,
+	useToast,
+	Checkbox,
+} from "@chakra-ui/react";
+import Pagination from "@choc-ui/paginator";
+import { Filter, Edit } from "react-feather";
+export default function TopicsList({ filterTopics, getTopic }) {
 	//DEFAULT LIST OF ALL TOPICS
 	let topics = useSelector(state => state.topics.topics);
 	const [getTopics] = useGetTopicsMutation();
@@ -24,138 +32,188 @@ export default function TopicsList({
 		// console.log("filterTopics 1: " + filterTopics  );
 	}
 
-	//HOW TO REPLACE topics with incoming filterTopics ??
+	//// CHAKRA-UI PAGINATION COMPONENT
+	const toast = useToast();
+	const [loading, setLoading] = React.useState(true);
+	const [current, setCurrent] = React.useState(1);
+	const pageSize = 5;
+	const offset = (current - 1) * pageSize;
+	const new_topics = topics.slice(offset, offset + pageSize);
 
-	// setTopics('1');
-
-	const [pagesPerPage] = useState(5);
-	const [currentPage, setCurrentPage] = useState(1);
+	const indexOfLastPost = current * pageSize;
+	const indexOfFirstPost = indexOfLastPost - pageSize;
 
 	useEffect(() => {
 		const fetchData = async () => {
 			await getTopics();
 		};
 		fetchData();
+		setLoading(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const indexOfLastPost = currentPage * pagesPerPage;
-	const indexOfFirstPost = indexOfLastPost - pagesPerPage;
+	const Prev = forwardRef((props, ref) => (
+		<Button ref={ref} {...props}>
+			Prev
+		</Button>
+	));
+	const Next = forwardRef((props, ref) => (
+		<Button ref={ref} {...props}>
+			Next
+		</Button>
+	));
 
-	const currentTopics = topics.slice(indexOfFirstPost, indexOfLastPost);
-
-	const paginate = pageNumber => {
-		setCurrentPage(pageNumber);
+	const itemRender = (_, type) => {
+		if (type === "prev") {
+			return Prev;
+		}
+		if (type === "next") {
+			return Next;
+		}
 	};
 
-	const onMouseEnterTopicList = () => {
-		setTopicActive(true);
-		setCategoryActive(true);
-	};
+	return loading ? (
+		<Spinner />
+	) : (
+		<>
+			{/* <Heading top={0} bg="blackAlpha.300" w="full" p={15} pos="fixed">
+        Page {current}{" "}
+      </Heading> */}
+			<div className="row">
+				<div className="col-md-6">
+					<Heading
+						as="h1"
+						fontSize={{ base: "14px", md: "24px" }}
+						fontWeight="700"
+					>
+						Topics
+					</Heading>
+				</div>
+				<div className="col-md-6">
+					<Button leftIcon={<Edit size="15" />} colorScheme="blue" size="sm">
+						Compose
+					</Button>
+				</div>
+			</div>
 
-	const onMouseLeaveTopicList = () => {
-		setTopicActive(false);
-		setCategoryActive(false);
-	};
+			<input
+				name="search"
+				type="text"
+				className="mt-3 form-control"
+				placeholder="search topics"
+			/>
 
-	// console.log(currentTopics);
+			<p className="mt-3 mb-1 small text-muted">
+				Showing {indexOfFirstPost + 1} - {indexOfLastPost} of {topics.length}{" "}
+				topics.
+			</p>
 
-	{
-		/* {isLoading && <div>Loading .... </div>} */
-	}
-
-	// <p className='mt-5 mb-3'>Showing {indexOfFirstPost  + 1} - {indexOfLastPost} of {topics.length} topics.</p>
-	// <ul className="list-unstyled h-50 overflow-auto">
-	//   {currentTopics.map((topic) => (
-	//     <TopicItem
-	//     key={topic.id} {...topic}
-	//     getTopic={getTopic}
-	//     />
-	//   ))}
-	// </ul>
-
-	// {currentTopics.length > 4 && (
-	//   <TopicPagination
-	//     count={topics.length}
-	//     paginate={paginate}
-	//     pagesPerPage={pagesPerPage}
-	//     currentPage={currentPage}
-	//   />
-	// )}
-
-	return (
-		<Box
-			pos="fixed"
-			top={0}
-			left={0}
-			h="100%"
-			w={topicActive ? "30%" : "10%"}
-			transition="all 0.2s ease-in-out"
-			bg="gray.500"
-			zIndex={2}
-			p={8}
-			paddingLeft="90px"
-			onMouseEnter={onMouseEnterTopicList}
-			onMouseLeave={onMouseLeaveTopicList}
-		>
-			<Heading opacity={topicActive ? 1 : 0} textAlign="center">
-				Topics
-			</Heading>
-			<Box
-				color="blackAlpha.800"
-				// display={topicActive ? "block" : "none"}
-				marginTop={8}
-				lineHeight={10}
+			<Table
+				maxW="100%"
+				m={0}
+				mt={2}
+				shadow="base"
+				rounded="lg"
+				bg="white.700"
+				variant="simple"
 			>
-				<Text color="white" fontSize="md">
-					<Box as="span" opacity={topicActive ? 0 : 1}>
-						H
-					</Box>
-					<Box as="span" display={topicActive ? "block" : "none"}>
-						How to use Instagram Anakytics
-					</Box>
-				</Text>
-				<Text color="white" fontSize="md">
-					<Box as="span" opacity={topicActive ? 0 : 1}>
-						6
-					</Box>
-					<Box as="span" display={topicActive ? "block" : "none"}>
-						6 Ways to Use Twitter Analytics
-					</Box>
-				</Text>
-				<Text color="white" fontSize="md">
-					<Box as="span" opacity={topicActive ? 0 : 1}>
-						H
-					</Box>
-					<Box as="span" display={topicActive ? "block" : "none"}>
-						How to use Pinterest Anakytics
-					</Box>
-				</Text>
-				<Text color="white" fontSize="md">
-					<Box as="span" opacity={topicActive ? 0 : 1}>
-						A
-					</Box>
-					<Box as="span" display={topicActive ? "block" : "none"}>
-						A practical Guide to Email Marketing Metrics
-					</Box>
-				</Text>
-				<Text color="white" fontSize="md">
-					<Box as="span" opacity={topicActive ? 0 : 1}>
-						F
-					</Box>
-					<Box as="span" display={topicActive ? "block" : "none"}>
-						Fall Into Autumn 2022 With Your Membership Update
-					</Box>
-				</Text>
-				<Text color="white" fontSize="md">
-					<Box as="span" opacity={topicActive ? 0 : 1}>
-						H
-					</Box>
-					<Box as="span" display={topicActive ? "block" : "none"}>
-						How to use Instagram Anakytics
-					</Box>
-				</Text>
-			</Box>
-		</Box>
+				<TableCaption>
+					<Pagination
+						current={current}
+						onChange={page => {
+							setCurrent(page);
+							toast({
+								title: "Pagination.",
+								description: `You changed to page ${page}`,
+								variant: "solid",
+								duration: 1000,
+								isClosable: true,
+								position: "top-right",
+							});
+						}}
+						pageSize={pageSize}
+						total={topics.length}
+						itemRender={itemRender}
+						paginationProps={{
+							display: "flex",
+							pos: "absolute",
+							left: "50%",
+							transform: "translateX(-50%)",
+						}}
+						colorScheme="red"
+						focusRing="green"
+					/>
+				</TableCaption>
+				<Thead>
+					<Tr>
+						<Th width="2">
+							<Checkbox></Checkbox>
+						</Th>
+						<Th></Th>
+						<Th className="small" width="10">
+							<Filter size={16} />
+						</Th>
+					</Tr>
+				</Thead>
+				<Tbody>
+					{new_topics.map(topic => (
+						<Tr key={topic.id}>
+							<Td colspan="3" onClick={() => getTopic(topic.id)}>
+								<span>{topic.title} </span>
+								<span className="badge badge-info small">
+									{topic.post_status}
+								</span>
+							</Td>
+						</Tr>
+					))}
+				</Tbody>
+			</Table>
+		</>
 	);
+
+	/*
+  return loading ? (
+    <>
+      
+      <Heading
+          as="h1"
+          fontSize={{ base: "14px", md: "24px" }}
+          fontWeight="700"
+        >
+          Topics
+        </Heading>
+      <input name="search" type="text" className='mt-0 form-control m-1' placeholder='search topics' />
+
+      <div className="row justify-content-center mt-2 mb-2">
+        <div className='col-md-6'>
+          <input name="selectAll" type="checkbox" /> toggleSelect
+        </div>
+        <div className='col-md-6 text-right'>
+          filter_icon
+        </div>
+      </div>
+
+      <p className='mt-2 mb-1'>Showing {indexOfFirstPost  + 1} - {indexOfLastPost} of {topics.length} topics.</p>
+
+      <ul className="list-unstyled h-50 overflow-auto">
+        {currentTopics.map((topic) => (
+          <TopicItem 
+          key={topic.id} {...topic} 
+          getTopic={getTopic}
+          />
+        ))}
+      </ul>
+
+      {currentTopics.length > 4 && (
+        <TopicPagination
+          count={topics.length}
+          paginate={paginate}
+          pagesPerPage={pagesPerPage}
+          currentPage={currentPage}
+        />
+      )}
+
+    </>
+  );
+*/
 }

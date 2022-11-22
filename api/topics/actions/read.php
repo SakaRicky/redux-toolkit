@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
                 "description" => $description,
                 "category_id" => $category_id,
                 "published" => $published,
+                "post_status" => $post_status,
                 "createdAt" => $createdAt
             );
             array_push($itemRecords, $e);

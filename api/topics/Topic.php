@@ -31,7 +31,7 @@
                 $WHERE_QUERY = " WHERE category_id=" . $this->category_id;
             }
 
-            $sqlQuery = "SELECT id, title, category_id, description, published, createdAt FROM " . $this->db_table . $WHERE_QUERY . " LIMIT 0, 20" ;
+            $sqlQuery = "SELECT * FROM " . $this->db_table . $WHERE_QUERY . " LIMIT 0, 20" ;
 
             $stmt = $this->conn->prepare($sqlQuery);
             $stmt->execute();
