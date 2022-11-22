@@ -57,6 +57,66 @@ router.post("/topics", async (req, res) => {
   }
 });
 
+const DeleteTopicBodySchema = z.object({ id: z.string() });
+
+router.delete("/topics", async (req, res) => {
+  try {
+    const parsedBody = DeleteTopicBodySchema.safeParse(req.body);
+
+    if (parsedBody.error) {
+      return res
+        .status(400)
+        .statusMessage("Unable to delete item. Data is incomplete");
+    }
+    const dataForTopicDeletion = parsedBody.data;
+    const topicDeleted = await prisma.topics.delete({
+      where: { id: dataForTopicDeletion.id },
+    });
+
+    const whiteLabledTopicDeleted = whiteLabelTopic(topicDeleted);
+    return res.json(whiteLabledTopicDeleted);
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(500);
+  }
+});
+
+const UpdatedTopicBodySchema = z.object({
+  id: z.string(),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  published: z.string().optional(),
+});
+
+router.put("/topics", async (req, res) => {
+  try {
+    const parsedBody = UpdatedTopicBodySchema.safeParse(req.body);
+
+    if (parsedBody.error) {
+      return res
+        .status(400)
+        .statusMessage(`Unable to update item. Data is incomplete`);
+    }
+
+    const dataForTopicUpdate = parsedBody.data;
+    const topicUpdated = await prisma.topics.update({
+      where: {
+        id: dataForTopicUpdate.id,
+      },
+      data: {
+        description: dataForTopicUpdate.description,
+        title: dataForTopicUpdate.title,
+        published: dataForTopicUpdate.published,
+      },
+    });
+
+    const whiteLabledTopicUpdated = whiteLabelTopic(topicUpdated);
+    return res.json(whiteLabledTopicUpdated);
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+});
+
 const whiteLabelTopic = (topicFromDb) => {
   return {
     id: topicFromDb.id,
