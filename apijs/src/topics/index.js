@@ -7,6 +7,19 @@ const router = express.Router();
 
 router.get("/topics", async (req, res) => {
   try {
+    const query = req.query;
+    const id = query.id;
+
+    if (typeof id === "string") {
+      const topic = await prisma.topics.findUnique({ where: { id: id } });
+
+      if (!topic) {
+        return res.status(404).statusMessage(`Topic with id ${id} not found`);
+      }
+
+      return res.json(whiteLabelTopic(topic));
+    }
+
     const topics = await prisma.topics.findMany();
 
     if (topics.length === 0) {
