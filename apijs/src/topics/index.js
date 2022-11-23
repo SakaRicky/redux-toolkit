@@ -14,7 +14,7 @@ router.get("/topics", async (req, res) => {
       const topic = await prisma.topics.findUnique({ where: { id: id } });
 
       if (!topic) {
-        return res.status(404).statusMessage(`Topic with id ${id} not found`);
+        return res.status(404).send(`Could not find topic with id ${id}`);
       }
 
       return res.json(whiteLabelTopic(topic));
@@ -45,9 +45,7 @@ router.post("/topics", async (req, res) => {
     const parsedBody = CreateTopicBodySchema.safeParse(req.body);
 
     if (parsedBody.error) {
-      return res
-        .status(400)
-        .statusMessage("Unable to create item. Data is incomplete");
+      return res.status(400).send("Unable to create item. Data is incomplete");
     }
 
     const dataForTopicCreation = parsedBody.data;
@@ -77,9 +75,7 @@ router.delete("/topics", async (req, res) => {
     const parsedBody = DeleteTopicBodySchema.safeParse(req.body);
 
     if (parsedBody.error) {
-      return res
-        .status(400)
-        .statusMessage("Unable to delete item. Data is incomplete");
+      return res.status(400).send("Unable to delete item. Data is incomplete");
     }
     const dataForTopicDeletion = parsedBody.data;
     const topicDeleted = await prisma.topics.delete({
@@ -106,9 +102,7 @@ router.put("/topics", async (req, res) => {
     const parsedBody = UpdatedTopicBodySchema.safeParse(req.body);
 
     if (parsedBody.error) {
-      return res
-        .status(400)
-        .statusMessage(`Unable to update item. Data is incomplete`);
+      return res.status(400).send(`Unable to update item. Data is incomplete`);
     }
 
     const dataForTopicUpdate = parsedBody.data;
