@@ -1,22 +1,18 @@
 const express = require("express");
 const { prisma } = require("../prisma");
-
 const router = express.Router();
-
 router.get("/categories", async (req, res) => {
   try {
     const categories = await prisma.categories.findMany();
     if (categories.length === 0) {
       return res.sendStatus(404);
     }
-
     return categories.map(whiteLabelCategory);
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);
   }
 });
-
 const whiteLabelCategory = (category) => {
   return {
     id: category.id,
