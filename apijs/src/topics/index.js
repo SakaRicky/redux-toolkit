@@ -2,6 +2,9 @@ const express = require("express");
 const { z } = require("zod");
 const { prisma } = require("../prisma");
 const { nanoid } = require("nanoid");
+const { getSingleTopic } = require("./singleTopic");
+const { ERRORS } = require("./errors");
+const { paginatedTopic } = require("./paginatedQuery");
 
 const router = express.Router();
 
@@ -11,19 +14,38 @@ router.get("/topics", async (req, res) => {
     const id = query.id;
 
     if (typeof id === "string") {
-      const topic = await prisma.topics.findUnique({ where: { id: id } });
+      const topic = await getSingleTopic(id);
 
-      if (!topic) {
-        return res.status(404).send(`Could not find topic with id ${id}`);
+      if (topic instanceof Error) {
+        const msg = topic.message;
+
+        if (msg === ERRORS.NOT_FOUND) {
+          return res.status(404).send(`Unable to find any topic with id ${id}`);
+        }
+
+        throw topic;
       }
 
       return res.json(whiteLabelTopic(topic));
     }
 
-    const topics = await prisma.topics.findMany();
+    const take = query.take || 20;
+    const cursor = query.cursor;
 
-    if (topics.length === 0) {
-      return res.sendStatus(404);
+    const topics = await paginatedTopic({ cursor, take });
+
+    if (topics instanceof Error) {
+      const msg = topics.message;
+
+      if (msg === ERRORS.NOT_FOUND) {
+        return res
+          .status(404)
+          .send(
+            `Unable to find any more topics with query take : ${take} and cursor : ${cursor}`
+          );
+      }
+
+      throw topics;
     }
 
     const whitelabeledTopics = topics.map(whiteLabelTopic);
