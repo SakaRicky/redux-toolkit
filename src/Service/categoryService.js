@@ -1,8 +1,8 @@
-import http from "../../config/http-common";
+import http from "./http-common";
 
 class CategoryApiService {
   getAll() {
-    return http.get("/categories/actions/read.php");
+    return http.get("/categories");
   }
 
   get(id) {
