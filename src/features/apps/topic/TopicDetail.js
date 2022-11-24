@@ -1,61 +1,47 @@
-import {useState} from 'react';
-import { Link } from "react-router-dom";
-import { useUpdateTopicMutation } from "./services/topicApi";
+import TopicDetailTab from './TopicDetailTab2';
+import { Tabs, Tab, TabList, TabPanels } from '@chakra-ui/react';
+import _ from 'lodash';
+import { XCircle } from 'react-feather';
 
 const TopicDetail = ({ currentTopic }) => {
 
-  const [title, setTitle] = useState(currentTopic.title)
-  const [description, setDescription] = useState(currentTopic.description)
-  const [id, setId] = useState(currentTopic.id)
-  const [updateTopic] = useUpdateTopicMutation();
+  const filtered = currentTopic.filter(function (el) {
+    return el != null;
+  });
 
-  const handleUpdateTopic = (e) => {
+  const uniqueFiltered = _.uniqBy(filtered, 'id');
+
+  const handleCloseTab = (e) => {
     e.preventDefault();
-    const topic = {
-      title,
-      description,
-      id
-    };
-    updateTopic(topic);
-    // console.log("currentTopic update: " + JSON.stringify(topic) );
+    alert("Close");
   };
 
   return (
 
-<form className='editTopic' name='updateTopic' onSubmit={handleUpdateTopic}>
-      <div className="col-md-12 mt-4">
+<>
+{uniqueFiltered && uniqueFiltered.length ? 
 
-        <h4 className='badge bg-dark text-white mb-2'>Tab 1 (x)</h4>
-
-      {currentTopic ? (
-        <>
-            <input
-              className="form-control"
-              name="title"
-              type="text"
-              onChange={(e) => setTitle(e.target.value.toUpperCase())} 
-              value={currentTopic.title}
+    <Tabs variant='soft-rounded' colorScheme='green'>
+      <TabList>
+          {uniqueFiltered?.map((topic) => (
+              <Tab key={topic.id}>
+                { topic.id ==0 ? "add" : "edit" }#{topic.id} 
+                <XCircle className="pl-1" onClick={handleCloseTab} size={18} /></Tab>
+          ))}
+      </TabList>
+      <TabPanels>
+          {uniqueFiltered?.map((topic) => (
+            <TopicDetailTab key={topic.id} 
+              id={topic.id}
+              editTitle={topic.title}
+              editDescription={topic.description}
             />
+          ))}    
+      </TabPanels>
+    </Tabs>
 
-            <textarea
-              rows="10"
-              className="mt-2 form-control"
-              name="description"
-              type="text"
-              onChange={(e) => setDescription(e.target.value)}
-              value={currentTopic.description}
-            />
-            <button className="mt-3 btn btn-primary">Submit</button>
-        </>
-
-      ) : (
-        <>
-          Click on a topic.
-        </>
-      ) }
-
-      </div>
-</form>
+ : <p>Empty</p>}
+</>
 
   );
 };

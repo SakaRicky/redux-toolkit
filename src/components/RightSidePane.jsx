@@ -27,7 +27,7 @@ const RightSidePane = ({
 				borderRadius={showRightSidebar ? "50%" : "50px"}
 				onClick={() => {
 					setShowRightSidebar(!showRightSidebar);
-					setShowLeftSidebar(false);
+					// setShowLeftSidebar(false);
 				}}
 			>
 				{showRightSidebar ? (

@@ -11,27 +11,13 @@ import {
 	useGetTopicByIdQuery,
 	useGetTopicsByCategoryIdQuery,
 } from "./services/topicApi";
-import { Container, Box, Heading, Flex } from "@chakra-ui/react";
 import Category from "./Category";
 import LeftSidePane from "../../../components/LeftSidePane";
 import RightSidePane from "../../../components/RightSidePane";
-import { Grid, GridItem } from "@chakra-ui/react";
-import { Tabs, Typography, Row, Col, Avatar, Card, Button, Switch } from "antd";
+import { Container, Box, Heading, Flex, AbsoluteCenter, Grid, GridItem, Tabs, TabList, Tab, TabPanels, TabPanel } from '@chakra-ui/react'
+import { Empty, Typography, Row, Col, Avatar, Card, Button, Switch } from 'antd';
 
 const TopicApp = () => {
-	//GENERAL
-	// const dispatch = useDispatch();
-	// const [errorMessage, setErrorMessage] = useState("");
-	// const [filter, setFilter] = useState(false);
-	// const [filteredTopics, setFilteredTopics] = useState(null);
-	// const [currentCategory, setCurrentCategory] = useState(null);
-	// const [currentCategoryId, setCurrentCategoryId] = useState(null); // initialize with skipToken to skip at first
-	// const [currentTopicId, setCurrentTopicId] = useState(null);
-
-	//@antd
-	const { Meta } = Card;
-	const { Title } = Typography;
-	const { TabPane } = Tabs;
 
 	//GENERAL
 	const dispatch = useDispatch();
@@ -41,15 +27,23 @@ const TopicApp = () => {
 	const [currentCategory, setCurrentCategory] = useState(null);
 	const [currentCategoryId, setCurrentCategoryId] = useState(null); // initialize with skipToken to skip at first
 	const [currentTopicId, setCurrentTopicId] = useState(null);
+	const [currentTopic, setCurrentTopic] = useState([]);
+	const [selection, setSelection] = useState([]);
+
+	//@antd
+	const { Meta } = Card;
+	const { Title } = Typography;
 
 	/// ONCLICK CATEGORY FILTER
-	const categoryChangeHandler = category_id => {
+	const categoryChangeHandler = (data) => {
+		setSelection(data);
+		const category_id = data;
 		if (category_id === 0) {
-			setFilter(false);
+		  setFilter(false);
 		} else {
-			setFilter(true);
-			setCurrentCategory(category_id);
-			setCurrentCategoryId(category_id);
+		  setFilter(true);
+		  setCurrentCategory(category_id);
+		  setCurrentCategoryId(category_id);
 		}
 	};
 	const filteredTopics_rtk = useGetTopicsByCategoryIdQuery({
@@ -57,48 +51,31 @@ const TopicApp = () => {
 	});
 	const filterTopics = filteredTopics_rtk["data"];
 
+	const topicData_res = useGetTopicByIdQuery({ id: currentTopicId })
+  	const currentTopic_res = topicData_res.data;
+
+	const addTopicData = {"id":"0","title":"","description":"","published":"","createdAt":"2022-11-23 16:22:34"}
+
 	////// GET TOPIC DETAIL
-	const getTopic = id => {
-		if (id === null) {
-			setCurrentTopicId(0);
+	const getTopic = (id) => {
+		if (id === 0) {
+		  setCurrentTopicId(0);
+		  setCurrentTopic( currentTopic.concat(addTopicData) );
 		} else {
-			/// FETCH TOPIC DETAILS
-			setCurrentTopicId(id);
+		  /// FETCH TOPIC DETAILS
+		  setCurrentTopicId(id);
+		  setCurrentTopic( currentTopic.concat(currentTopic_res) );
 		}
 	};
-	const topicData_res = useGetTopicByIdQuery({ id: currentTopicId });
-	const currentTopic = topicData_res.data;
 
-	// ////// GET TOPIC DETAIL
-	// const getTopic = id => {
-	// 	if (id === null) {
-	// 		setCurrentTopicId(0);
-	// 	} else {
-	// 		/// FETCH TOPIC DETAILS
-	// 		setCurrentTopicId(id);
-	// 	}
-	// };
-	// const topicData_res = useGetTopicByIdQuery({ id: currentTopicId });
-	// const currentTopic = topicData_res.data;
-
-	// if (isLoading) {
-	//   return <div>Loading...</div>;
-	// }
-	// if (error) {
-	//   return <div>Oops, an error occured</div>;
-	// }
-
-	// console.log("useGetTopicsByCategoryIdQuery: " + JSON.stringify(data));
-
-	const [showLeftSidebar, setShowLeftSidebar] = useState(false);
+	const [showLeftSidebar, setShowLeftSidebar] = useState(true);
 	const [showRightSidebar, setShowRightSidebar] = useState(false);
 
 	return (
-		<Box bg="blue.600" pos="relative" h="100%">
+		<Grid bg="blue.600" pos="relative">
 			{" "}
-			<Flex w="100%" h="100%" mt="1px" gap={2} pos="relative" overflow="hidden">
+			<GridItem w="100%" mt="1px" gap={2} pos="relative" >
 				<Box
-					as="aside"
 					boxShadow="2xl"
 					p="2rem"
 					bg="white"
@@ -116,10 +93,14 @@ const TopicApp = () => {
 						showLeftSidebar={showLeftSidebar}
 					>
 						<CategoriesList
+							selection={selection}
 							currentCategory={currentCategory}
 							categoryChangeHandler={categoryChangeHandler}
 						/>
-						<TopicsList getTopic={getTopic} filterTopics={filterTopics} />
+						<TopicsList 
+							getTopic={getTopic}
+							filterTopics={filterTopics} 
+						/>
 					</LeftSidePane>
 				</Box>
 				<Box
@@ -133,16 +114,15 @@ const TopicApp = () => {
 					transition="all 0.2s ease-out"
 				>
 					<Flex justifyContent="space-between">
-						<Heading as="h3" size="2xl">
-							Main Content Area
-						</Heading>
+						
+
 						{currentTopic ? (
 							<TopicDetail
 								// {...currentTopic}
 								currentTopic={currentTopic}
 							/>
 						) : (
-							""
+							<Empty className="ml-5 mt-lg-5" description="Click on a topic." />
 						)}
 					</Flex>
 				</Box>
@@ -189,25 +169,29 @@ const TopicApp = () => {
 							style={{ border: 2, width: 300, marginTop: 16 }}
 						>
 							<Tabs>
-								<TabPane tab="Title 1" key="1">
-									<p>
-										Search Bar <br /> Switch detail view
-										<br /> Filter <br /> Listing with scrollable <br />{" "}
-										<h3>Html Content</h3>
-									</p>
-								</TabPane>
-								<TabPane tab="Tab 2" key="2">
-									<p>Content of Tab Pane 2</p>
-								</TabPane>
-								<TabPane tab="Tab 3" key="3">
-									<p>Content of Tab Pane 3</p>
-								</TabPane>
+								<TabList>
+								<Tab>One</Tab>
+								<Tab>Two</Tab>
+								<Tab>Three</Tab>
+								</TabList>
+
+								<TabPanels>
+								<TabPanel>
+									<p>one!</p>
+								</TabPanel>
+								<TabPanel>
+									<p>two!</p>
+								</TabPanel>
+								<TabPanel>
+									<p>three!</p>
+								</TabPanel>
+								</TabPanels>
 							</Tabs>
 						</Card>
 					</RightSidePane>
 				</Box>
-			</Flex>
-		</Box>
+			</GridItem>
+		</Grid>
 	);
 };
 

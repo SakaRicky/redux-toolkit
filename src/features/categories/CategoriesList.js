@@ -1,47 +1,42 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useCategoriesQuery } from './categoryApi';
 import { getCategories } from "./categorySlice";
-import { Link } from "react-router-dom";
+import { Select, Button, Tooltip } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 
-const CategoriesList = ({ currentCategory, categoryChangeHandler }) => {
-	const [currentIndex, setCurrentIndex] = useState(-1);
-	const categoriesFinal = useSelector(state => state.categories);
-	const dispatch = useDispatch();
-	const initFetch = useCallback(() => {
-		dispatch(getCategories());
-	}, [dispatch]);
+const CategoriesList = ({ currentCategory, categoryChangeHandler, selection }) => {
 
-	useEffect(() => {
-		initFetch();
-	}, [initFetch]);
-
-	console.log("categoriesFinal: ", categoriesFinal);
-
-	//PUSHING TO TOPICS
-	// topics.map((topic) => categories.push(topic.category));
-	// const categoriesFinal = ["All Categories", ...new Set(categories)];
+	const { data, error, isLoading, isSuccess } = useCategoriesQuery();
+	const categoriesFinal = [{id:'', title:'All categories'}, ...new Set(data)];
+	
+	let content = categoriesFinal.map(({ id, title}) => ({
+		value : id, label: title 
+	}))
 
 	return (
-		<div className="col-md-12">
-			<ul className="list-group m-4">
-				<li className="list-group-item" onClick={() => categoryChangeHandler()}>
-					All
-				</li>
-				{categoriesFinal.map(category => (
-					<li
-						key={category.id}
-						className={
-							category.title === currentCategory
-								? "list-group-item active"
-								: "list-group-item"
-						}
-						onClick={() => categoryChangeHandler(category.id)}
-					>
-						{category.title}
-					</li>
-				))}
-			</ul>
+	<>
+		<div className='isErrorIsLoading'>
+			{error && <p>An error occured</p>}
+			{isLoading && <p>Loading...</p>}
 		</div>
+		{isSuccess && (    
+			<div style={{padding: 20}}>
+			<Select
+				defaultValue="All categories"
+				style={{
+				width: 120,
+				}}
+				onChange={categoryChangeHandler}
+				allowClear
+				options={content}
+			/> 
+			<Tooltip title="Create new category">
+				<Button className="mr-2 text-muted" icon={<PlusOutlined />}>Create category</Button>
+			</Tooltip>
+			</div>
+		)}
+	</>
 	);
 };
 
