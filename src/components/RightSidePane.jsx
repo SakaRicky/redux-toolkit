@@ -1,4 +1,4 @@
-import { Box, Button, Heading } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 import React from "react";
 
 const RightSidePane = ({
@@ -27,7 +27,7 @@ const RightSidePane = ({
 				borderRadius={showRightSidebar ? "50%" : "50px"}
 				onClick={() => {
 					setShowRightSidebar(!showRightSidebar);
-					// setShowLeftSidebar(false);
+					setShowLeftSidebar(false);
 				}}
 			>
 				{showRightSidebar ? (
