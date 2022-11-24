@@ -1,43 +1,36 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { Select } from "@chakra-ui/react";
+import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useCategoriesQuery } from './categoryApi';
 import { getCategories } from "./categorySlice";
-import { Select, Button, Tooltip } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
 
-const CategoriesList = ({ currentCategory, categoryChangeHandler, selection }) => {
+const CategoriesList = ({ currentCategory, categoryChangeHandler }) => {
+  const categoriesFinal = useSelector((state) => state.categories);
+  const dispatch = useDispatch();
+  const initFetch = useCallback(() => {
+    dispatch(getCategories());
+  }, [dispatch]);
 
-	const { data, error, isLoading, isSuccess } = useCategoriesQuery();
-	const categoriesFinal = [{id:'', title:'All categories'}, ...new Set(data)];
-	
-	let content = categoriesFinal.map(({ id, title}) => ({
-		value : id, label: title 
-	}))
+  useEffect(() => {
+    initFetch();
+  }, [initFetch]);
 
-	return (
-	<>
-		<div className='isErrorIsLoading'>
-			{error && <p>An error occured</p>}
-			{isLoading && <p>Loading...</p>}
-		</div>
-		{isSuccess && (    
-			<div style={{padding: 20}}>
-			<Select
-				defaultValue="All categories"
-				style={{
-				width: 120,
-				}}
-				onChange={categoryChangeHandler}
-				allowClear
-				options={content}
-			/> 
-			<Tooltip title="Create new category">
-				<Button className="mr-2 text-muted" icon={<PlusOutlined />}>Create category</Button>
-			</Tooltip>
-			</div>
-		)}
-	</>
-	);
+  return (
+    <div className="col-md-12">
+      <Select variant="outline">
+        <option value="">Select Category</option>
+        {categoriesFinal &&
+          categoriesFinal.map((category) => (
+            <option
+              onClick={() => categoryChangeHandler(category.id)}
+              value={category.title}
+              key={category.id}
+            >
+              {category.title}
+            </option>
+          ))}
+      </Select>
+    </div>
+  );
 };
 
 export default CategoriesList;

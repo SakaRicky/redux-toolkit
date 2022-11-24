@@ -1,15 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import CategoryApiService from "./categoryService";
+import CategoryApiService from "../../Service/categoryService";
 
 const initialState = [];
 
-export const getCategories = createAsyncThunk(
-  "categories/get",
-  async () => {
-    const res = await CategoryApiService.getAll();
-    return res.data['items'];
-  }
-);
+export const getCategories = createAsyncThunk("categories/get", async () => {
+  const res = await CategoryApiService.getAll();
+  return res.data;
+});
 
 export const createCategory = createAsyncThunk(
   "categories/create",
@@ -55,7 +52,6 @@ const categorySlice = createSlice({
   name: "category",
   initialState,
   extraReducers: {
-
     [createCategory.fulfilled]: (state, action) => {
       state.push(action.payload);
     },
@@ -65,7 +61,9 @@ const categorySlice = createSlice({
     },
 
     [updateCategory.fulfilled]: (state, action) => {
-      const index = state.findIndex(category => category.id === action.payload.id);
+      const index = state.findIndex(
+        (category) => category.id === action.payload.id
+      );
       state[index] = {
         ...state[index],
         ...action.payload,
@@ -84,7 +82,6 @@ const categorySlice = createSlice({
     [findCategoriesByTitle.fulfilled]: (state, action) => {
       return [...action.payload];
     },
-
   },
 });
 
