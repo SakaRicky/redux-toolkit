@@ -4,8 +4,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const topicApi = createApi({
   reducerPath: 'topicApi',
   baseQuery: fetchBaseQuery({
-    // baseUrl: 'https://jsonplaceholder.typicode.com',
-    baseUrl: 'http://localhost:8080/api/topics/actions',
+    baseUrl: 'http://localhost:8080/topics',
     prepareHeaders: (headers, { getState }) => {
       headers.set("Content-Type", "application/json");
       return headers;
@@ -19,14 +18,14 @@ export const topicApi = createApi({
       }),
     }),
     topics: builder.query({
-      query: () => "/read.php"
+      query: () => ""
     }),
     getTopicById: builder.query({
       query: (arg) => {
         const { id } = arg;
         console.log('arg: ', arg);
         return {
-          url: '/single_read.php',
+          url: '/',
           params: { id },
           method: 'GET',
         };
@@ -62,7 +61,7 @@ export const topicApi = createApi({
         const { category_id } = arg;
         console.log('arg: ', arg);
         return {
-          url: '/read.php',
+          url: '/',
           params: { category_id },
           method: 'GET',
         };

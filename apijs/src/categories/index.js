@@ -7,7 +7,7 @@ router.get("/categories", async (req, res) => {
     if (categories.length === 0) {
       return res.sendStatus(404);
     }
-    return categories.map(whiteLabelCategory);
+    return res.json(categories.map(whiteLabelCategory));
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);

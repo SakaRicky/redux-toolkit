@@ -6,6 +6,7 @@ const { getSingleTopic } = require("./singleTopic");
 const { ERRORS } = require("./errors");
 const { paginatedTopic } = require("./paginatedQuery");
 const router = express.Router();
+
 router.get("/topics", async (req, res) => {
   try {
     const query = req.query;
@@ -42,10 +43,12 @@ router.get("/topics", async (req, res) => {
     return res.sendStatus(500);
   }
 });
+
 const CreateTopicBodySchema = z.object({
   title: z.string(),
   description: z.string(),
 });
+
 router.post("/topics", async (req, res) => {
   try {
     const parsedBody = CreateTopicBodySchema.safeParse(req.body);
@@ -68,6 +71,7 @@ router.post("/topics", async (req, res) => {
     return res.sendStatus(500);
   }
 });
+
 const DeleteTopicBodySchema = z.object({ id: z.string() });
 router.delete("/topics", async (req, res) => {
   try {
@@ -86,12 +90,14 @@ router.delete("/topics", async (req, res) => {
     return res.sendStatus(500);
   }
 });
+
 const UpdatedTopicBodySchema = z.object({
   id: z.string(),
   title: z.string().optional(),
   description: z.string().optional(),
   published: z.string().optional(),
 });
+
 router.put("/topics", async (req, res) => {
   try {
     const parsedBody = UpdatedTopicBodySchema.safeParse(req.body);
@@ -115,6 +121,7 @@ router.put("/topics", async (req, res) => {
     return res.sendStatus(500);
   }
 });
+
 const whiteLabelTopic = (topicFromDb) => {
   return {
     id: topicFromDb.id,
