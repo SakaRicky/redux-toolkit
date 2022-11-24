@@ -1,0 +1,23 @@
+{
+  "name": "api_js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^4.6.1",
+    "express": "^4.18.2",
+    "nanoid": "^3.3.4",
+    "zod": "^3.19.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.28.0",
+    "nodemon": "^2.0.20",
+    "prisma": "^4.6.1"
+  }
+}
